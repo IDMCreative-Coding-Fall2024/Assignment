@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://use.typekit.net/wpn8fzu.css">
+    <meta charset="utf-8" />
+
+</head>
+
+<body>
+    <div class="content">
+        <h2 id="title" class="title">Chernobyl Disaster</h2>
+        <img src="img/radiation.png" class="icon" />
+    </div>
+    <div class="canvas">
+    </div>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <h2>Chernobyl disaster still remains TODAY</h2>
+            <p>This is a record of the proportion of radioactive elements remaining in the area of the Chernobyl nuclear
+                power plant after the Chernobyl disaster. It will reflect the degree to which the four major radioactive
+                elements Iodine-131, Cesium-137, Strontium-90, and Plutonium-239 decay over time. You can click "Into the Radioactive Elements" to allow camera permission and interact with radioactive elements. You can also click on different buttons on the page
+                to view more info.</p>
+        </div>
+    </div>
+
+
+    <div class="shell" onclick="getBar()">
+        <div class="contentContainer">
+            <div class="shellBody">
+                <p>The Chernobyl disaster, which occurred on April 26, 1986, is one of the most catastrophic nuclear
+                    accidents in history. Located in the then-Soviet territory of Ukraine, the Chernobyl Nuclear Power
+                    Plant
+                    experienced a massive explosion in its Reactor No. 4. The explosion released large quantities of
+                    radioactive
+                    particles into the atmosphere, which then spread over a vast area of Europe.
+                </p>
+                <p>
+                    The immediate cause of the accident was a sudden power output surge during a reactor systems test.
+                    Flawed
+                    reactor technology coupled with inadequately trained personnel exacerbated the situation, leading to
+                    the
+                    explosion and subsequent fires. Over the following weeks, emergency crews worked tirelessly to
+                    contain the
+                    fires and prevent further explosions.
+                </p>
+                <p>
+                    Immediate health effects included two plant workers dying on the day of the explosion, with 28 more
+                    people
+                    succumbing to acute radiation sickness in the subsequent days. However, the long-term health
+                    impacts,
+                    including increased cancer risks, affected thousands. Large areas around Chernobyl remain
+                    uninhabitable due
+                    to lingering radioactive contamination. The disaster not only impacted health and the environment
+                    but also
+                    significantly influenced nuclear policies worldwide.
+                </p>
+                <p>
+                    <strong> Iodine-131 (I-131): </strong>With a half-life of 8 days, this short-lived radioactive
+                    isotope posed
+                    the most
+                    immediate threat to humans and the environment post-accident. I-131 can be inhaled or ingested,
+                    accumulating
+                    in the human thyroid, thereby increasing the risk of thyroid cancer. Due to its brief half-life, it
+                    has
+                    largely decayed by now.
+                </p>
+                <p>
+                    <strong> Cesium-137 (Cs-137): </strong>Possessing a half-life of 30 years, this isotope is one of
+                    the
+                    primary long-lasting
+                    radioactive contaminants in the environment post-disaster. Its half-life suggests that by 2021, 35
+                    years
+                    after the accident, its initial amount has reduced to about half.
+                </p>
+                <p>
+                    <strong> Strontium-90 (Sr-90): </strong>With a half-life of 28.8 years, its decay pattern is similar
+                    to that
+                    of Cs-137,
+                    implying that its residual environmental presence has also approximately halved by now.
+                </p>
+                <p>
+                    <strong> Plutonium-239 (Pu-239): </strong>This isotope has a staggering half-life of 24,100 years.
+                    As a
+                    long-lived radioactive
+                    element, it continues to linger in the soils of the Chernobyl region.
+
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="bottomcontent">
+        <h2 id="currentDate" class="currentDate">04/26/1986</h2>
+        <div class="bottomRight">
+            <h2>
+                <span class="element" id="I-137">I-137 ★</span>
+                <span class="element" id="Cs-137">Cs-137 ●</span>
+                <span class="element" id="Sr-90">Sr-90 ▲</span>
+                <span class="element" id="Pu-239">Pu-239 ■</span>
+            </h2>
+        </div>
+
+    </div>
+</body>
+<script>
+    document.getElementById('I-137').addEventListener('click', function () {
+        console.log('I-137 clicked!');
+        lastClickedElement = 'star'; 
+        generateStars();
+        shouldDrawRectangle = true;
+        drawBottomRectangle();
+    });
+
+    document.getElementById('Cs-137').addEventListener('click', function () {
+        console.log('Cs-137 clicked!');
+        lastClickedElement = 'circle'; 
+        generateCircles();
+        shouldDrawRectangle = true;
+        drawBottomRectangle();
+    });
+
+    document.getElementById('Sr-90').addEventListener('click', function () {
+        console.log('Sr-90 clicked!');
+        lastClickedElement = 'triangle'; 
+        generateTriangles();
+        shouldDrawRectangle = true;
+        drawBottomRectangle();
+    });
+
+    document.getElementById('Pu-239').addEventListener('click', function () {
+        console.log('Pu-239 clicked!');
+        lastClickedElement = 'square';
+        generateSquares();
+        shouldDrawRectangle = true;
+        drawBottomRectangle();
+    });
+
+
+
+    document.getElementById('title').addEventListener('click', function () {
+        console.log('title clicked!');
+        clearParticles();
+        elements.star.count = 100;
+        elements.circle.count = 100;
+        elements.triangle.count = 100;
+        elements.square.count = 100;
+        shouldDrawRectangle = false;
+        setup();
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('currentDate').innerText = getCurrentDateStr();
+        daysSinceChernobylDisaster = calculateDaysSinceChernobyl();
+
+        const dateElement = document.getElementById('currentDate');
+
+        dateElement.addEventListener('click', function () {
+            if (dateElement.textContent === '04/26/1986') {
+                dateElement.textContent = getCurrentDateStr();
+            } else {
+                dateElement.textContent = '04/26/1986';
+            }
+            daysSinceChernobylDisaster = calculateDaysSinceChernobyl();
+            clearParticles();
+            elements.star.count = 100;
+            elements.circle.count = 100;
+            elements.triangle.count = 100;
+            elements.square.count = 100;
+            shouldDrawRectangle = false;
+            setup();
+
+        });
+
+    });
+</script>
+<script src="sketch.js"></script>
+
+</html>
